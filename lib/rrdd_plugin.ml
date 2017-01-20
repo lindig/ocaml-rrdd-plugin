@@ -77,7 +77,7 @@ module Utils = struct
 end
 
 (* Establish a XMLPRC interface with RRDD *)
-module RRDD = Rrd_client.Client
+module RRDD = Rrd_rpc_client
 
 module Xs = struct
 	module Xs = Xs_client_unix.Client(Xs_transport_unix_client)
@@ -140,8 +140,8 @@ module Reporter = struct
 	}
 
 	let choose_protocol = function
-		| Rrd_interface.V1 -> Rrd_protocol_v1.protocol
-		| Rrd_interface.V2 -> Rrd_protocol_v2.protocol
+		| Rrd_idl.V1 -> Rrd_protocol_v1.protocol
+		| Rrd_idl.V2 -> Rrd_protocol_v2.protocol
 
 	let wait_until_next_reading
 			(module D : Debug.DEBUG)
@@ -149,7 +149,7 @@ module Reporter = struct
 			~uid
 			~protocol ~overdue_count =
 		let next_reading =
-			RRDD.Plugin.Local.register uid Rrd.Five_Seconds protocol
+			RRDD.Plugin.Local.register uid Rrd_idl.Five_Seconds protocol
 		in
 		let wait_time = next_reading -. neg_shift in
 		let wait_time = if wait_time < 0.1 then wait_time+.5. else wait_time in
@@ -160,11 +160,11 @@ module Reporter = struct
 		end
 		else begin
 			if (overdue_count > 1) then begin
-				(* if register returns negative more than once in a succession, 
+				(* if register returns negative more than once in a succession,
 				the thread should get delayed till things are normal back again *)
 				let backoff_time = 2. ** ((float_of_int (overdue_count) -. 1.)) in
-				D.debug "rrdd says next reading is overdue, seems like rrdd is busy; 
-					Backing off for %.1f seconds" backoff_time; 
+				D.debug "rrdd says next reading is overdue, seems like rrdd is busy;
+					Backing off for %.1f seconds" backoff_time;
 				Thread.delay (backoff_time);
 			end
 			else D.debug "rrdd says next reading is overdue by %.1f seconds; not sleeping" (-.wait_time);
@@ -234,7 +234,7 @@ module Reporter = struct
 					(module D)
 					~neg_shift
 					~uid
-					~protocol 
+					~protocol
 					~overdue_count:!overdue_count;
 				let payload = Rrd_protocol.({
 					timestamp = Utils.now ();
@@ -277,7 +277,8 @@ module Reporter = struct
 				(List.map string_of_int shared_page_refs |> String.concat ",");
 			Xs.write xs
 				(Printf.sprintf "%s/%s/protocol" xs_state.Xs.root_path uid)
-				(Rpc.string_of_rpc (Rrd_interface.rpc_of_plugin_protocol protocol));
+				(Rpc.string_of_rpc
+          (Rpcmarshal.marshal Rrd_idl.typ_of_plugin_protocol protocol));
 			Xs.write xs
 				(Printf.sprintf "%s/%s/ready" xs_state.Xs.root_path uid)
 				"true");
@@ -383,7 +384,7 @@ module Process = functor (N : (sig val name : string end)) -> struct
 		])
 			(fun _ -> failwith "Invalid argument")
 			(Printf.sprintf "Usage: %s [-daemon] [-pidfile filename]" N.name);
-			
+
 		if !daemonize then (
 			D.debug "Daemonizing ..";
 			Unixext.daemonize ()

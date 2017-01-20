@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 08f000de16027f87ad9411113580fc5f)
+# DO NOT EDIT (digest: aba48d0409c197894aa2ee7ac6258986)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -25,7 +25,7 @@ true: annot, bin_annot
 <lib/*.ml{,i,y}>: pkg_rrd-transport
 <lib/*.ml{,i,y}>: pkg_stdext
 <lib/*.ml{,i,y}>: pkg_threads
-<lib/*.ml{,i,y}>: pkg_xcp.rrd
+<lib/*.ml{,i,y}>: pkg_xcp.rrd_ppx
 <lib/*.ml{,i,y}>: pkg_xenstore.unix
 <lib/*.ml{,i,y}>: pkg_xenstore_transport.unix
 # Executable rrdp_dummy
@@ -38,7 +38,7 @@ true: annot, bin_annot
 <test/rrdp_dummy.{native,byte}>: pkg_rrd-transport
 <test/rrdp_dummy.{native,byte}>: pkg_stdext
 <test/rrdp_dummy.{native,byte}>: pkg_threads
-<test/rrdp_dummy.{native,byte}>: pkg_xcp.rrd
+<test/rrdp_dummy.{native,byte}>: pkg_xcp.rrd_ppx
 <test/rrdp_dummy.{native,byte}>: pkg_xenstore.unix
 <test/rrdp_dummy.{native,byte}>: pkg_xenstore_transport.unix
 <test/rrdp_dummy.{native,byte}>: use_rrdd_plugin
@@ -47,7 +47,7 @@ true: annot, bin_annot
 <test/*.ml{,i,y}>: pkg_rrd-transport
 <test/*.ml{,i,y}>: pkg_stdext
 <test/*.ml{,i,y}>: pkg_threads
-<test/*.ml{,i,y}>: pkg_xcp.rrd
+<test/*.ml{,i,y}>: pkg_xcp.rrd_ppx
 <test/*.ml{,i,y}>: pkg_xenstore.unix
 <test/*.ml{,i,y}>: pkg_xenstore_transport.unix
 <test/*.ml{,i,y}>: use_rrdd_plugin

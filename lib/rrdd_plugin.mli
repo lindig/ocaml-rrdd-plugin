@@ -65,8 +65,8 @@ module Reporter : sig
 		uid:string ->
 		neg_shift:float ->
 		target:target ->
-		protocol:Rrd_interface.plugin_protocol ->
-		dss_f:(unit -> (Rrd.ds_owner * Ds.ds) list) ->
+		protocol:Rrd_idl.plugin_protocol ->
+		dss_f:(unit -> (Rrd.ds_owner * Rrd_idl.DS.ds) list) ->
 		unit
 	(** Create a synchronous stats reporter. This function will block forever
 	    unless it catches a Sys.Break. It will usually be simpler to call
@@ -85,8 +85,8 @@ module Reporter : sig
 		uid:string ->
 		neg_shift:float ->
 		target:target ->
-		protocol:Rrd_interface.plugin_protocol ->
-		dss_f:(unit -> (Rrd.ds_owner * Ds.ds) list) ->
+		protocol:Rrd_idl.plugin_protocol ->
+		dss_f:(unit -> (Rrd.ds_owner * Rrd_idl.DS.ds) list) ->
 		t
 	(** Create an asynchronous stats reporter. Return a Reporter.t, which can be
 	    used to query the state of the reporter, or to cancel it.
@@ -128,8 +128,8 @@ module Process : functor (N : (sig val name : string end)) -> sig
 	val main_loop :
 		neg_shift:float ->
 		target:Reporter.target ->
-		protocol:Rrd_interface.plugin_protocol ->
-		dss_f:(unit -> (Rrd.ds_owner * Ds.ds) list) ->
+		protocol:Rrd_idl.plugin_protocol ->
+		dss_f:(unit -> (Rrd.ds_owner * Rrd_idl.DS.ds) list) ->
 		unit
 	(** Begin the main loop.
 	    {ul

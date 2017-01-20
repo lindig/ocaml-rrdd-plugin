@@ -14,7 +14,14 @@ Library rrdd_plugin
   ByteOpt: -bin-annot
   NativeOpt: -bin-annot
   Modules: Rrdd_plugin
-  BuildDepends: threads, forkexec, stdext, rrd, xcp.rrd, rrd-transport, xenstore.unix, xenstore_transport.unix
+  BuildDepends +: threads
+  BuildDepends +: forkexec
+  BuildDepends +: stdext
+  BuildDepends +: rrd
+  BuildDepends +: xcp.rrd_ppx
+  BuildDepends +: rrd-transport
+  BuildDepends +: xenstore.unix
+  BuildDepends +: xenstore_transport.unix
 
 Executable rrdp_dummy
   CompiledObject: best
@@ -24,7 +31,9 @@ Executable rrdp_dummy
   Install: false
   ByteOpt: -bin-annot
   NativeOpt: -bin-annot
-  BuildDepends: xenstore.unix, xenstore_transport.unix, rrdd-plugin
+  BuildDepends +: xenstore.unix
+  BuildDepends +: xenstore_transport.unix
+  BuildDepends +: rrdd-plugin
 
 Document api
   Title: rrdd plugin library

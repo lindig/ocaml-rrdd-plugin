@@ -13,12 +13,13 @@
  *)
 
 module Process = Rrdd_plugin.Process(struct let name = "xcp-rrdd-dummy" end)
+module Ds = Rrd_idl.DS
 
 let make_cnt start =
 	let i = ref (start-1) in
 	let f () = incr i; Int64.of_int !i in
 	f
-	
+
 let cnt = make_cnt 0
 
 let generate_dummy_dss () =
@@ -44,5 +45,5 @@ let _ =
 	Process.main_loop
 		~neg_shift:0.5
 		~target:!mode
-		~protocol:Rrd_interface.V2
+		~protocol:Rrd_idl.V2
 		~dss_f:generate_dummy_dss
